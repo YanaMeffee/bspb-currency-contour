@@ -82,7 +82,7 @@
 <p>История сохранена в странице как датированный срез официальных данных ЦБ за три года. Она не обновляется при нажатии «Обновить курсы»: эта кнопка обновляет только текущий курс. Для расширения исторического среза требуется новая публикация страницы. <a href="https://www.cbr.ru/development/sxml/" target="_blank" rel="noopener">Источник истории и описание API ЦБ</a>.</p>
 <p>Бюджет компании = Q × бюджетный курс. Запас или превышение рассчитываются с учётом введённых расходов. Если известен общий рублёвый лимит, бюджетный курс = лимит / Q.</p>
 <p>Учебный форвард: F = S₀ × (1 + r₽ × T) / (1 + rвал × T), T = дни / 365. Используются простые ставки. Это не котировка банка и не прогноз. Для реального предложения используйте основной режим.</p>
-<p>При изменении суммы, валюты, даты, доли покрытия или типа обязательства котировка очищается. Досрочное закрытие и перенос сделки не рассчитываются. Учтены только введённые расходы; тарифы, лимиты и условия банка автоматически не проверяются.</p>
+<p>При изменении суммы, базового курса договора, валюты, даты, доли покрытия или типа обязательства котировка очищается. Смена валюты также очищает ручной ориентир, бюджетный и базовый курсы, фиксинг NDF и валютную ставку; валютная сумма требует повторного ввода. Рублёвая базовая цена сохраняется. Досрочное закрытие и перенос сделки не рассчитываются. Учтены только введённые расходы; тарифы, лимиты и условия банка автоматически не проверяются.</p>
 <p><a href="https://www.bspb.ru/foreign-trade/hedge" target="_blank" rel="noopener">Инструменты хеджирования БСПБ</a> · <a href="https://cdn.bspb.ru/Pravila_i2_B_01_2026_na_sajt_c5b344a906.pdf" target="_blank" rel="noopener">Правила i2B: расчётный форвард</a>. Валютный справочник не является перечнем доступных сделок банка. Калькулятор — учебный прототип и не заключает сделки.</p>
 </div></details>
 </div>
@@ -261,6 +261,11 @@ resetResults(error.message);
 function referenceRate() {
 return field('reference').value.trim() === '' ? spotRate() : number('reference');
 }
+function resetCurrencyInputs() {
+for (const name of ['reference','budgetRate','baseRate','fixing','scenario','quote','fxRate']) field(name).value = '';
+if (field('contract').value !== 'rub_ndf') field('amount').value = '';
+scenarioEdited = false;
+}
 function updateCurrencies() {
 const selected = field('currency').value;
 const priority = ['CNY','AED','INR','TRY','KZT','BYN','AMD','AZN','KGS','UZS','TJS','RSD','BRL','ZAR','VND','IDR','USD','EUR'];
@@ -272,10 +277,7 @@ return (aIndex < 0 ? 100 : aIndex) - (bIndex < 0 ? 100 : bIndex) || a.Name.local
 });
 field('currency').replaceChildren(...currencies.map(currency => new Option(currency.CharCode + ' · ' + currency.Name, currency.CharCode)));
 field('currency').value = currencies.some(currency => currency.CharCode === selected) ? selected : currencies[0].CharCode;
-if (field('currency').value !== selected) {
-field('quote').value = '';
-scenarioEdited = false;
-}
+if (field('currency').value !== selected) resetCurrencyInputs();
 view('currency-note').textContent = currencies.length + ' валют из публикации ЦБ. Доступность форварда уточняйте в банке.';
 }
 function showMarket() {
@@ -314,11 +316,11 @@ button.disabled = false;
 }
 form.addEventListener('submit', event => event.preventDefault());
 form.addEventListener('input', event => {
-if (['amount','currency','payment','share','contract'].includes(event.target.name)) field('quote').value = '';
+if (['amount','baseRate','currency','payment','share','contract'].includes(event.target.name)) field('quote').value = '';
 if (event.target.name === 'contract') {field('amount').value = '';field('baseRate').value = '';field('fixing').value = '';}
 if (['payment','historyChoice'].includes(event.target.name)) applyHistoricalScenario(event.target.name === 'historyChoice');
 if (event.target.name === 'scenario') scenarioEdited = true;
-if (event.target.name === 'currency') {scenarioEdited = false;field('quote').value = '';field('scenario').value = '';showMarket();}
+if (event.target.name === 'currency') {resetCurrencyInputs();showMarket();}
 else calculate();
 });
 field('reference').addEventListener('input', () => {applyHistoricalScenario();calculate();});
