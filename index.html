@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>БСПБ Валютный контур — калькулятор</title>
-<meta name="description" content="Учебный калькулятор валютного риска: курсы ЦБ, сценарии и частичное хеджирование. Не официальный сервис банка.">
+<meta name="description" content="Калькулятор валютного риска: курсы ЦБ, сценарии и частичное хеджирование. Не официальный сервис банка.">
 <style>body{margin:0;background:#f4f7fb}</style>
 </head>
 <body>
@@ -13,7 +13,7 @@
 </style>
 <section id="bspb-fx" aria-label="Калькулятор валютных рисков">
 <div class="fx-wrap">
-<div class="fx-tag">БСПБ Валютный контур · учебный прототип</div>
+<div class="fx-tag">БСПБ Валютный контур</div>
 <h2>Будущий платёж.<br>Понятный валютный риск.</h2>
 <p class="fx-lead">Укажите котировку форварда, полученную от банка для вашей валюты, суммы и даты платежа. Сравните расходы с покрытием и без него. Опубликованные курсы ЦБ загружаются отдельно и служат ориентиром.</p>
 <div class="fx-layout">
@@ -30,7 +30,7 @@
 <label>Курс выбранного сценария, ₽<input name="scenario" type="number" min="0.00000001" step="any" placeholder="После загрузки курса" required><small>Можно подставить исторический сценарий или ввести свой курс. Это условие расчёта, не обещание и не прогноз банка.</small></label>
 <label class="fx-full" data-fixing hidden>Расчётный курс NDF в сценарии, ₽<input name="fixing" type="number" min="0.00000001" step="any" placeholder="Пусто — совпадает с будущим курсом"><small>Это сценарий фиксинга, указанного в условиях NDF. Он может отличаться от курса покупки валюты или пересчёта договора. Валюта расчёта — рубли.</small></label>
 <label class="fx-full">Доля покрытия: <output data-share>70%</output><input name="share" type="range" min="0" max="100" step="1" value="70"><small>Остальная часть оплачивается по курсу на дату платежа.</small></label>
-<label class="fx-full">Способ расчёта<select name="mode"><option value="manual">По котировке банка — основной режим</option><option value="theory">Учебная модель — дополнительный режим</option></select></label>
+<label class="fx-full">Способ расчёта<select name="mode"><option value="manual">По котировке банка — основной режим</option><option value="theory">Теоретический расчёт — дополнительный режим</option></select></label>
 <label class="fx-full" data-manual>Котировка форварда, ₽ за 1 ед.<input name="quote" type="number" min="0.00000001" step="any" placeholder="Введите котировку банка"><small>Введите рублей за 1 единицу выбранной валюты, даже если банк котирует за 10, 100 или 1000 единиц. Котировка должна соответствовать сумме и дате платежа. Наличие валюты в списке не подтверждает доступность форварда БСПБ.</small></label>
 <div class="fx-full fx-fields" data-theory hidden>
 <label>Рублёвая ставка, % годовых<input name="rubRate" type="number" min="0" max="100" step="any" placeholder="Введите ставку"></label>
@@ -81,9 +81,9 @@
 <p>Исторические сценарии: для каждого опубликованного курса берётся изменение к курсу за выбранное число календарных дней до него (последняя публикация не позже начальной даты, отклонение не больше 7 дней). Из отношений конечного курса к начальному выбираются эмпирические P10, P50 и P90 с линейной интерполяцией. Сценарный курс = текущий ориентир × историческое отношение. Требуется минимум 30 интервалов; сроки — до 365 дней. Интервалы перекрываются и не являются независимыми наблюдениями. Эти процентили не задают вероятность будущих исходов и не охватывают все риски.</p>
 <p>История сохранена в странице как датированный срез официальных данных ЦБ за три года. Она не обновляется при нажатии «Обновить курсы»: эта кнопка обновляет только текущий курс. Для расширения исторического среза требуется новая публикация страницы. <a href="https://www.cbr.ru/development/sxml/" target="_blank" rel="noopener">Источник истории и описание API ЦБ</a>.</p>
 <p>Бюджет компании = Q × бюджетный курс. Запас или превышение рассчитываются с учётом введённых расходов. Если известен общий рублёвый лимит, бюджетный курс = лимит / Q.</p>
-<p>Учебный форвард: F = S₀ × (1 + r₽ × T) / (1 + rвал × T), T = дни / 365. Используются простые ставки. Это не котировка банка и не прогноз. Для реального предложения используйте основной режим.</p>
+<p>Теоретический форвард: F = S₀ × (1 + r₽ × T) / (1 + rвал × T), T = дни / 365. Используются простые ставки. Это не котировка банка и не прогноз. Для реального предложения используйте основной режим.</p>
 <p>При изменении суммы, базового курса договора, валюты, даты, доли покрытия или типа обязательства котировка очищается. Смена валюты также очищает ручной ориентир, бюджетный и базовый курсы, фиксинг NDF и валютную ставку; валютная сумма требует повторного ввода. Рублёвая базовая цена сохраняется. Досрочное закрытие и перенос сделки не рассчитываются. Учтены только введённые расходы; тарифы, лимиты и условия банка автоматически не проверяются.</p>
-<p><a href="https://www.bspb.ru/foreign-trade/hedge" target="_blank" rel="noopener">Инструменты хеджирования БСПБ</a> · <a href="https://cdn.bspb.ru/Pravila_i2_B_01_2026_na_sajt_c5b344a906.pdf" target="_blank" rel="noopener">Правила i2B: расчётный форвард</a>. Валютный справочник не является перечнем доступных сделок банка. Калькулятор — учебный прототип и не заключает сделки.</p>
+<p><a href="https://www.bspb.ru/foreign-trade/hedge" target="_blank" rel="noopener">Инструменты хеджирования БСПБ</a> · <a href="https://cdn.bspb.ru/Pravila_i2_B_01_2026_na_sajt_c5b344a906.pdf" target="_blank" rel="noopener">Правила i2B: расчётный форвард</a>. Валютный справочник не является перечнем доступных сделок банка. Калькулятор не является официальным сервисом БСПБ и не заключает сделки.</p>
 </div></details>
 </div>
 </div>
@@ -149,7 +149,7 @@ const fixing = field('fixing').value.trim() === '' ? future : number('fixing');
 if (!(amount > 0 && amount <= 1e12 && future > 0 && Number.isFinite(future) && days >= 1 && Number.isFinite(days))) throw new Error('Укажите сумму, будущую дату платежа и положительный сценарный курс.');
 if (indexed && !(baseRate > 0 && Number.isFinite(baseRate))) throw new Error('Введите базовый курс из рублёвого договора.');
 if (![baseCosts,hedgeCosts,fundingCost,collateral].every(value => Number.isFinite(value) && value >= 0)) throw new Error('Укажите неотрицательные комиссии, обеспечение и стоимость его финансирования.');
-if (share > 0 && (!(forward > 0 && Number.isFinite(forward)) || (theoretical && !(rubRate >= 0 && rubRate <= 100 && fxRate >= 0 && fxRate <= 100)))) throw new Error(theoretical ? 'Для учебной модели нужны ориентир курса и обе ставки от 0 до 100%.' : 'Введите котировку банка для выбранной суммы, валюты и даты. При покрытии 0% котировка не требуется.');
+if (share > 0 && (!(forward > 0 && Number.isFinite(forward)) || (theoretical && !(rubRate >= 0 && rubRate <= 100 && fxRate >= 0 && fxRate <= 100)))) throw new Error(theoretical ? 'Для теоретического расчёта нужны ориентир курса и обе ставки от 0 до 100%.' : 'Введите котировку банка для выбранной суммы, валюты и даты. При покрытии 0% котировка не требуется.');
 if (kind !== 'fx_forward' && share > 0 && !(fixing > 0 && Number.isFinite(fixing))) throw new Error('Введите положительный сценарный фиксинг NDF или оставьте поле пустым.');
 return {budgetRate,kind,days,amount:indexed ? amount / baseRate : amount,share,future,forward:share === 0 ? 0 : forward,fixing,baseCosts,hedgeCosts,fundingCost,collateral,theoretical};
 }
@@ -252,7 +252,7 @@ const budget = payment.budgetRate === null ? null : payment.amount * payment.bud
 view('budget').textContent = budget === null ? 'Не задан' : rubles(budget);
 view('budget-unhedged').textContent = budgetBalance(budget,result.unhedged);
 view('budget-hedged').textContent = budgetBalance(budget,result.total);
-view('result-note').textContent = payment.days + ' дн. · ' + (payment.theoretical ? 'учебный курс' : 'котировка пользователя') + ' · учтены только введённые затраты';
+view('result-note').textContent = payment.days + ' дн. · ' + (payment.theoretical ? 'теоретический курс' : 'котировка пользователя') + ' · учтены только введённые затраты';
 renderScenarios(payment);
 } catch (error) {
 resetResults(error.message);
