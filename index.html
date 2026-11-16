@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>БСПБ Валютный контур — калькулятор</title>
+<meta name="description" content="Учебный калькулятор валютного риска: курсы ЦБ, сценарии и частичное хеджирование. Не официальный сервис банка.">
+<style>body{margin:0;background:#f4f7fb}</style>
+</head>
+<body>
+<style>
+#bspb-fx{--navy:#102c53;--red:#df334c;--muted:#62758d;--line:#dce5ef;font:16px/1.55 Arial,sans-serif;color:var(--navy);background:#f4f7fb;padding:48px 20px}#bspb-fx *{box-sizing:border-box}#bspb-fx .fx-wrap{max-width:1120px;margin:auto}#bspb-fx .fx-tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:700}#bspb-fx h2{font-size:clamp(30px,5vw,48px);line-height:1.12;margin:14px 0}#bspb-fx h3{margin:0 0 16px;font-size:21px}#bspb-fx p{margin:10px 0}#bspb-fx .fx-lead{max-width:720px;color:var(--muted)}#bspb-fx .fx-layout{display:grid;grid-template-columns:1fr 1.05fr;gap:24px;margin-top:28px}#bspb-fx .fx-card{padding:28px;background:white;border:1px solid var(--line);border-radius:20px}#bspb-fx .fx-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}#bspb-fx label{display:block;font-size:14px;font-weight:700}#bspb-fx input,#bspb-fx select{display:block;width:100%;min-width:0;margin-top:7px;padding:12px;border:1px solid #bdcad9;border-radius:9px;background:white;color:var(--navy);font:16px Arial,sans-serif}#bspb-fx input:focus,#bspb-fx select:focus,#bspb-fx button:focus-visible{outline:3px solid #92b6df;outline-offset:2px}#bspb-fx input[type=range]{padding:0;accent-color:var(--red)}#bspb-fx .fx-full{grid-column:1/-1}#bspb-fx small{font-size:12px;color:var(--muted);font-weight:400;display:block;margin-top:6px}#bspb-fx button{font:700 14px Arial,sans-serif;cursor:pointer;background:var(--navy);color:white;border:0;border-radius:9px;padding:12px 18px}#bspb-fx button:disabled{opacity:.5;cursor:wait}#bspb-fx .fx-status{background:#edf2f8;border-radius:10px;padding:14px;font-size:14px;margin:18px 0}#bspb-fx .fx-status[data-error=true]{background:#fff0f0;color:#8d2637}#bspb-fx .fx-rate{font-size:32px;font-weight:700;letter-spacing:-1px}#bspb-fx .fx-result{background:var(--navy);color:white;border-radius:14px;padding:23px;margin:20px 0}#bspb-fx .fx-result small{color:#c9d8eb}#bspb-fx .fx-result strong{font-size:30px;display:block;margin-top:6px}#bspb-fx .fx-pair{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}#bspb-fx .fx-pair b{text-align:right}#bspb-fx .fx-scroll{overflow-x:auto;margin-top:22px}#bspb-fx table{border-collapse:collapse;width:100%;font-size:14px}#bspb-fx th,#bspb-fx td{text-align:right;padding:13px 10px;border-bottom:1px solid var(--line);white-space:nowrap}#bspb-fx th:first-child,#bspb-fx td:first-child{text-align:left}#bspb-fx th{color:var(--muted);font-size:12px}#bspb-fx details{margin-top:20px}#bspb-fx summary{cursor:pointer;font-weight:700}#bspb-fx .fx-note{font-size:13px;color:var(--muted)}#bspb-fx a{color:inherit;text-decoration:underline}#bspb-fx [hidden]{display:none!important}@media(max-width:780px){#bspb-fx .fx-layout{grid-template-columns:1fr}#bspb-fx .fx-card{padding:20px}#bspb-fx{padding:32px 14px}}@media(max-width:420px){#bspb-fx .fx-fields{grid-template-columns:1fr}#bspb-fx .fx-rate{font-size:27px}}
+</style>
+<section id="bspb-fx" aria-label="Калькулятор валютных рисков">
+<div class="fx-wrap">
+<div class="fx-tag">БСПБ Валютный контур · учебный прототип</div>
+<h2>Будущий платёж.<br>Понятный валютный риск.</h2>
+<p class="fx-lead">Сравните расходы импортёра с защитой курса и без неё. Данные о курсах загружаются при открытии страницы, расчёты выполняются в вашем браузере.</p>
+<div class="fx-layout">
+<form class="fx-card" data-form>
+<h3>Параметры платежа</h3>
+<div class="fx-fields">
+<label>Валюта платежа<select name="currency"><option value="CNY">CNY · китайский юань</option><option value="USD">USD · доллар США</option><option value="EUR">EUR · евро</option></select></label>
+<label>Сумма в валюте<input name="amount" type="number" min="1" max="1000000000000" step="any" value="300000" required></label>
+<label>Дата платежа<input name="payment" type="date" required></label>
+<label>Курс в сценарии, ₽<input name="scenario" type="number" min="0.0001" step="any" placeholder="После загрузки курса" required><small>Ваша оценка будущего курса, не прогноз банка.</small></label>
+<label class="fx-full">Доля покрытия: <output data-share>70%</output><input name="share" type="range" min="0" max="100" step="1" value="70"><small>Остальная часть оплачивается по курсу на дату платежа.</small></label>
+<label class="fx-full">Курс защиты<select name="mode"><option value="manual">Ввести полученную котировку</option><option value="theory">Рассчитать теоретический форвард</option></select></label>
+<label class="fx-full" data-manual>Котировка форварда, ₽ за 1 ед.<input name="quote" type="number" min="0.0001" step="any" placeholder="Введите котировку банка"><small>Калькулятор не получает котировки БСПБ автоматически.</small></label>
+<div class="fx-full fx-fields" data-theory hidden>
+<label>Рублёвая ставка, % годовых<input name="rubRate" type="number" min="0" max="100" step="any" placeholder="Введите ставку"></label>
+<label>Валютная ставка, % годовых<input name="fxRate" type="number" min="0" max="100" step="any" placeholder="Введите ставку"></label>
+<small class="fx-full">Введите ставки на срок платежа. Они не загружаются с рынка. Ключевая ставка не заменяет стоимость фондирования банка.</small>
+</div>
+</div>
+</form>
+<div class="fx-card">
+<h3>Опубликованный курс</h3>
+<div class="fx-rate" data-rate>—</div>
+<div class="fx-status" data-status role="status">Загружаем данные…</div>
+<button type="button" data-refresh>Обновить курсы</button>
+<small>Курсы ЦБ РФ через <a href="https://www.cbr-xml-daily.ru/" target="_blank" rel="noopener">cbr-xml-daily.ru</a>. Это внешний сервис, не сервис Банка России. <a href="https://www.cbr.ru/currency_base/daily/" target="_blank" rel="noopener">Сверить с ЦБ РФ</a>.</small>
+<div class="fx-result" aria-live="polite"><small>Стоимость платежа с покрытием</small><strong data-total>—</strong><small data-result-note>Заполните параметры для расчёта.</small></div>
+<div class="fx-pair"><span>Без покрытия</span><b data-unhedged>—</b></div>
+<div class="fx-pair"><span>Разница расходов</span><b data-difference>—</b></div>
+<div class="fx-pair"><span>Курс защиты</span><b data-forward>—</b></div>
+<div class="fx-pair"><span>Защищённая сумма в валюте</span><b data-covered>—</b></div>
+<p class="fx-note">Положительная разница означает меньшие расходы в выбранном сценарии; отрицательная — большие. Хеджирование фиксирует часть расходов и не гарантирует экономию.</p>
+</div>
+</div>
+<div class="fx-card" style="margin-top:24px">
+<h3>Если курс изменится</h3>
+<p class="fx-note">Три условных сценария относительно опубликованного курса ЦБ. Это не вероятности и не прогноз.</p>
+<div class="fx-scroll"><table><thead><tr><th>Сценарий</th><th>Курс, ₽</th><th>Без покрытия, ₽</th><th>С покрытием, ₽</th><th>Разница, ₽</th></tr></thead><tbody data-rows><tr><td colspan="5">Заполните параметры платежа и курс защиты.</td></tr></tbody></table></div>
+<details><summary>Как рассчитывается результат</summary><div class="fx-note"><p>Без покрытия = сумма в валюте × будущий курс.</p><p>С покрытием = сумма × доля покрытия × курс защиты + сумма × непокрытая доля × будущий курс.</p><p>Теоретический форвард: F = S × (1 + r₽ × T) / (1 + rвал × T), где S — опубликованный курс ЦБ, ставки — в долях единицы, T — число календарных дней / 365. Это упрощённая модель, не торговая котировка и не прогноз будущего курса.</p><p>Для NDF показан эквивалентный экономический результат при совпадении даты, базового курса расчёта и валютного обязательства. Фактическая покупка валюты и расчёт по NDF — отдельные денежные потоки; возможен базисный риск.</p><p>Комиссии, спред покупки валюты, обеспечение, стоимость фондирования, изменение или досрочное закрытие сделки не учтены. Условия реальной сделки определяет банк. Калькулятор не заключает сделки и не является официальным сервисом БСПБ.</p></div></details>
+</div>
+</div>
+</section>
+<script>
+(function () {
+'use strict';
+const root = document.getElementById('bspb-fx');
+if (!root || root.dataset.initialized) return;
+root.dataset.initialized = 'true';
+const form = root.querySelector('[data-form]');
+const field = name => form.elements.namedItem(name);
+const view = name => root.querySelector('[data-' + name + ']');
+const number = name => field(name).value.trim() === '' ? NaN : Number(field(name).value);
+const format = (value, digits = 2) => new Intl.NumberFormat('ru-RU', {maximumFractionDigits:digits, minimumFractionDigits:digits}).format(value);
+const rubles = value => format(value) + ' ₽';
+const dateText = value => new Intl.DateTimeFormat('ru-RU', {timeZone:'Europe/Moscow'}).format(new Date(value));
+const calendarDate = () => new Intl.DateTimeFormat('sv-SE', {timeZone:'Europe/Moscow'}).format(new Date());
+const addDays = (date, days) => new Date(Date.parse(date + 'T00:00:00Z') + days * 86400000).toISOString().slice(0,10);
+let market = null;
+let scenarioEdited = false;
+field('payment').value = addDays(calendarDate(), 60);
+field('payment').min = addDays(calendarDate(), 1);
+function spotRate() {
+const currency = market && market.Valute[field('currency').value];
+return currency ? currency.Value / currency.Nominal : NaN;
+}
+function resetResults(message) {
+['total','unhedged','difference','forward','covered'].forEach(name => view(name).textContent = '—');
+view('result-note').textContent = message;
+view('rows').replaceChildren();
+const row = view('rows').insertRow();
+const cell = row.insertCell();
+cell.colSpan = 5;
+cell.textContent = message;
+}
+function paymentDays() {
+return (Date.parse(field('payment').value + 'T00:00:00Z') - Date.parse(calendarDate() + 'T00:00:00Z')) / 86400000;
+}
+function calculate() {
+const theoretical = field('mode').value === 'theory';
+view('manual').hidden = theoretical;
+view('theory').hidden = !theoretical;
+view('share').textContent = field('share').value + '%';
+const amount = number('amount');
+const share = number('share') / 100;
+const future = number('scenario');
+const days = paymentDays();
+const spot = spotRate();
+const rubRate = number('rubRate');
+const fxRate = number('fxRate');
+const forward = theoretical ? spot * (1 + rubRate / 100 * days / 365) / (1 + fxRate / 100 * days / 365) : number('quote');
+if (!(amount > 0 && amount <= 1e12 && future > 0 && days >= 1 && Number.isFinite(days))) {
+resetResults('Укажите сумму, будущую дату платежа и положительный сценарный курс.');
+return;
+}
+if (share > 0 && (!(forward > 0 && Number.isFinite(forward)) || (theoretical && !(rubRate >= 0 && rubRate <= 100 && fxRate >= 0 && fxRate <= 100)))) {
+resetResults(theoretical ? 'Для модели нужны загруженный курс и обе ставки от 0 до 100%.' : 'Введите полученный от банка курс защиты или выберите теоретический расчёт.');
+return;
+}
+const protectedRate = share === 0 ? 0 : forward;
+const cost = scenario => amount * share * protectedRate + amount * (1 - share) * scenario;
+const total = cost(future);
+view('total').textContent = rubles(total);
+view('unhedged').textContent = rubles(amount * future);
+view('difference').textContent = rubles(amount * future - total);
+view('forward').textContent = share === 0 ? 'Покрытие не выбрано' : format(forward, 4) + ' ₽';
+view('covered').textContent = format(amount * share) + ' ' + field('currency').value;
+view('result-note').textContent = days + ' дн. до платежа · ' + (theoretical ? 'теоретический курс' : 'введённая котировка') + ' · без комиссий';
+view('rows').replaceChildren();
+if (!(spot > 0)) {
+const cell = view('rows').insertRow().insertCell();
+cell.colSpan = 5;
+cell.textContent = 'Таблица появится после загрузки опубликованного курса.';
+return;
+}
+for (const [label, factor] of [['Укрепление рубля −10%', .9], ['Без изменения', 1], ['Ослабление рубля +10%', 1.1]]) {
+const scenario = spot * factor;
+const row = view('rows').insertRow();
+[label, format(scenario,4), format(amount * scenario), format(cost(scenario)), format(amount * scenario - cost(scenario))].forEach(value => row.insertCell().textContent = value);
+}
+}
+function showMarket() {
+const spot = spotRate();
+view('rate').textContent = spot > 0 ? '1 ' + field('currency').value + ' = ' + format(spot,4) + ' ₽' : '—';
+if (spot > 0 && !scenarioEdited) field('scenario').value = spot.toFixed(4);
+calculate();
+}
+async function loadMarket() {
+const button = view('refresh');
+button.disabled = true;
+view('status').textContent = 'Загружаем последнюю публикацию…';
+view('status').dataset.error = 'false';
+const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 12000);
+try {
+const response = await fetch('https://www.cbr-xml-daily.ru/daily_json.js', {signal:controller.signal, credentials:'omit', cache:'no-cache'});
+if (!response.ok) throw new Error('HTTP ' + response.status);
+const data = await response.json();
+if (!data.Date || !Number.isFinite(Date.parse(data.Date))) throw new Error('Invalid date');
+for (const code of ['CNY','USD','EUR']) {
+const currency = data.Valute && data.Valute[code];
+if (!currency || !(currency.Value > 0 && currency.Nominal > 0)) throw new Error('Invalid rates');
+}
+market = data;
+const age = (Date.parse(calendarDate() + 'T00:00:00Z') - Date.parse(data.Date.slice(0,10) + 'T00:00:00Z')) / 86400000;
+view('status').textContent = 'Курс действует с ' + dateText(data.Date) + '. Получен ' + new Intl.DateTimeFormat('ru-RU', {timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'}).format(new Date()) + ' МСК. ' + (age > 4 ? 'Публикация старше четырёх дней — проверьте источник.' : 'Официальный ежедневный курс; не биржевая онлайн-котировка.');
+view('status').dataset.error = String(age > 4);
+showMarket();
+} catch (error) {
+view('status').dataset.error = 'true';
+view('status').textContent = market ? 'Обновление не удалось. Сохранён курс с ' + dateText(market.Date) + '; его актуальность не подтверждена.' : 'Курсы не загружены. Проверьте интернет и нажмите «Обновить курсы». Демонстрационные значения не подставляются.';
+calculate();
+} finally {
+clearTimeout(timeout);
+button.disabled = false;
+}
+}
+form.addEventListener('submit', event => event.preventDefault());
+form.addEventListener('input', event => {
+if (event.target.name === 'scenario') scenarioEdited = true;
+if (event.target.name === 'currency') {scenarioEdited = false;field('quote').value = '';showMarket();}
+else calculate();
+});
+view('refresh').addEventListener('click', loadMarket);
+loadMarket();
+})();
+</script>
+
+</body>
+</html>
