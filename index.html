@@ -5,11 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>БСПБ Валютный контур — калькулятор</title>
 <meta name="description" content="Калькулятор валютного риска: курсы ЦБ, сценарии и частичное хеджирование. Не официальный сервис банка.">
-<style>body{margin:0;background:#f4f7fb}</style>
+<style>body{margin:0;background:#f5f5f7}</style>
 </head>
 <body>
 <style>
-#bspb-fx{--navy:#102c53;--red:#df334c;--muted:#62758d;--line:#dce5ef;font:16px/1.55 Arial,sans-serif;color:var(--navy);background:#f4f7fb;padding:48px 20px}#bspb-fx *{box-sizing:border-box}#bspb-fx .fx-wrap{max-width:1120px;margin:auto}#bspb-fx .fx-tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:700}#bspb-fx h2{font-size:clamp(30px,5vw,48px);line-height:1.12;margin:14px 0}#bspb-fx h3{margin:0 0 16px;font-size:21px}#bspb-fx p{margin:10px 0}#bspb-fx .fx-lead{max-width:720px;color:var(--muted)}#bspb-fx .fx-layout{display:grid;grid-template-columns:1fr 1.05fr;gap:24px;margin-top:28px}#bspb-fx .fx-card{padding:28px;background:white;border:1px solid var(--line);border-radius:20px}#bspb-fx .fx-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}#bspb-fx label{display:block;font-size:14px;font-weight:700}#bspb-fx input,#bspb-fx select{display:block;width:100%;min-width:0;margin-top:7px;padding:12px;border:1px solid #bdcad9;border-radius:9px;background:white;color:var(--navy);font:16px Arial,sans-serif}#bspb-fx input:focus,#bspb-fx select:focus,#bspb-fx button:focus-visible{outline:3px solid #92b6df;outline-offset:2px}#bspb-fx input[type=range]{padding:0;accent-color:var(--red)}#bspb-fx .fx-full{grid-column:1/-1}#bspb-fx small{font-size:12px;color:var(--muted);font-weight:400;display:block;margin-top:6px}#bspb-fx button{font:700 14px Arial,sans-serif;cursor:pointer;background:var(--navy);color:white;border:0;border-radius:9px;padding:12px 18px}#bspb-fx button:disabled{opacity:.5;cursor:wait}#bspb-fx .fx-status{background:#edf2f8;border-radius:10px;padding:14px;font-size:14px;margin:18px 0}#bspb-fx .fx-status[data-error=true]{background:#fff0f0;color:#8d2637}#bspb-fx .fx-rate{font-size:32px;font-weight:700;letter-spacing:-1px}#bspb-fx .fx-result{background:var(--navy);color:white;border-radius:14px;padding:23px;margin:20px 0}#bspb-fx .fx-result small{color:#c9d8eb}#bspb-fx .fx-result strong{font-size:30px;display:block;margin-top:6px}#bspb-fx .fx-pair{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}#bspb-fx .fx-pair b{text-align:right}#bspb-fx .fx-scroll{overflow-x:auto;margin-top:22px}#bspb-fx table{border-collapse:collapse;width:100%;font-size:14px}#bspb-fx th,#bspb-fx td{text-align:right;padding:13px 10px;border-bottom:1px solid var(--line);white-space:nowrap}#bspb-fx th:first-child,#bspb-fx td:first-child{text-align:left}#bspb-fx th{color:var(--muted);font-size:12px}#bspb-fx details{margin-top:20px}#bspb-fx summary{cursor:pointer;font-weight:700}#bspb-fx .fx-note{font-size:13px;color:var(--muted)}#bspb-fx a{color:inherit;text-decoration:underline}#bspb-fx [hidden]{display:none!important}@media(max-width:780px){#bspb-fx .fx-layout{grid-template-columns:1fr}#bspb-fx .fx-card{padding:20px}#bspb-fx{padding:32px 14px}}@media(max-width:420px){#bspb-fx .fx-fields{grid-template-columns:1fr}#bspb-fx .fx-rate{font-size:27px}}
+#bspb-fx{--navy:#152c56;--red:#ed174c;--muted:#6b7080;--line:#e8e9ed;font:16px/1.55 Arial,Helvetica,sans-serif;color:var(--navy);background:#f5f5f7;padding:64px 24px 48px}
+#bspb-fx *{box-sizing:border-box}
+#bspb-fx .fx-wrap{max-width:1200px;margin:auto}
+#bspb-fx h2{font-size:clamp(36px,5.2vw,64px);font-weight:500;letter-spacing:-.045em;line-height:1.06;margin:0 0 24px;max-width:900px}
+#bspb-fx h3{margin:0 0 24px;font-size:25px;font-weight:500;letter-spacing:-.025em}
+#bspb-fx p{margin:12px 0}
+#bspb-fx .fx-lead{max-width:840px;color:var(--muted);font-size:17px;line-height:1.65}
+#bspb-fx .fx-layout{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;margin-top:40px;align-items:start}
+#bspb-fx .fx-card{padding:32px;background:#fff;border:1px solid transparent;border-radius:24px}
+#bspb-fx .fx-fields{display:grid;grid-template-columns:1fr 1fr;gap:24px 18px}
+#bspb-fx label{display:block;font-size:14px;font-weight:500}
+#bspb-fx input,#bspb-fx select{display:block;width:100%;min-width:0;margin-top:9px;padding:15px 14px;border:1px solid #e4e5e9;border-radius:12px;background:#f7f7f9;color:var(--navy);font:16px Arial,Helvetica,sans-serif;transition:border-color .15s,background .15s}
+#bspb-fx input:hover,#bspb-fx select:hover{border-color:#a9afbd}
+#bspb-fx input:focus,#bspb-fx select:focus{background:#fff;border-color:var(--navy);outline:2px solid #dce2ed;outline-offset:2px}
+#bspb-fx button:focus-visible,#bspb-fx a:focus-visible,#bspb-fx summary:focus-visible{outline:3px solid #8c9fc0;outline-offset:4px}
+#bspb-fx input[type=range]{padding:0;accent-color:var(--red);border:0;background:transparent;min-height:24px}
+#bspb-fx .fx-full{grid-column:1/-1}
+#bspb-fx small{font-size:12px;line-height:1.55;color:var(--muted);font-weight:400;display:block;margin-top:8px}
+#bspb-fx button{font:500 14px Arial,Helvetica,sans-serif;cursor:pointer;background:var(--red);color:#fff;border:0;border-radius:12px;padding:15px 22px;transition:background .15s}
+#bspb-fx button:hover{background:#cf1041}
+#bspb-fx button:disabled{opacity:.45;cursor:default}
+#bspb-fx .fx-status{background:#f5f5f7;border-radius:14px;padding:16px;font-size:13px;margin:20px 0}
+#bspb-fx .fx-status[data-error=true]{background:#fff0f4;color:#a20e35}
+#bspb-fx .fx-rate{font-size:36px;font-weight:500;letter-spacing:-.04em}
+#bspb-fx .fx-result{background:var(--navy);color:#fff;border-radius:20px;padding:28px;margin:28px 0 16px;border-top:4px solid var(--red)}
+#bspb-fx .fx-result small{color:#d1d9e8}
+#bspb-fx .fx-result strong{font-size:clamp(28px,3vw,38px);font-weight:500;letter-spacing:-.035em;display:block;margin-top:10px;overflow-wrap:anywhere}
+#bspb-fx .fx-pair{display:flex;justify-content:space-between;gap:18px;padding:16px 0;border-bottom:1px solid var(--line);font-size:14px}
+#bspb-fx .fx-pair b{text-align:right;font-weight:500}
+#bspb-fx .fx-scroll{overflow-x:auto;margin-top:24px}
+#bspb-fx table{border-collapse:collapse;width:100%;font-size:14px}
+#bspb-fx th,#bspb-fx td{text-align:right;padding:17px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+#bspb-fx th:first-child,#bspb-fx td:first-child{text-align:left}
+#bspb-fx th{color:var(--muted);font-size:12px;font-weight:500;background:#f7f7f9}
+#bspb-fx details{margin-top:20px}
+#bspb-fx summary{cursor:pointer;font-weight:500}
+#bspb-fx .fx-note{font-size:13px;line-height:1.65;color:var(--muted)}
+#bspb-fx a{color:var(--navy);text-decoration:underline;text-underline-offset:4px}
+#bspb-fx a:hover{color:var(--red)}
+#bspb-fx ul{padding-left:22px}
+#bspb-fx li{padding:6px 0}
+#bspb-fx li::marker{color:var(--red)}
+#bspb-fx [hidden]{display:none!important}
+@media(max-width:780px){#bspb-fx .fx-layout{grid-template-columns:1fr;margin-top:28px}#bspb-fx .fx-card{padding:24px;border-radius:20px}#bspb-fx{padding:40px 16px}#bspb-fx h2{letter-spacing:-.035em}#bspb-fx .fx-lead{font-size:15px}}
+@media(max-width:420px){#bspb-fx .fx-fields{grid-template-columns:1fr}#bspb-fx .fx-rate{font-size:28px}#bspb-fx .fx-card{padding:20px}#bspb-fx .fx-result{padding:20px}}
 </style>
 <section id="bspb-fx" aria-label="Калькулятор валютных рисков">
 <div class="fx-wrap">
@@ -83,19 +127,7 @@
 <h3>Если курс изменится</h3>
 <p class="fx-note">Сценарии P10 / P50 / P90 основаны на прошлых изменениях курса за сопоставимый срок. Они применяются к загруженному курсу ЦБ либо ручному ориентиру. Для NDF в таблице фиксинг равен курсу платежа; отдельный фиксинг применяется только к основному расчёту. Это не прогноз и не вероятностная гарантия.</p>
 <div class="fx-scroll"><table><thead><tr><th>Сценарий</th><th>Курс, ₽</th><th>Без покрытия, ₽</th><th>С покрытием, ₽</th><th>Разница, ₽</th><th>Бюджет с защитой</th></tr></thead><tbody data-rows><tr><td colspan="6">Заполните параметры платежа и курс защиты.</td></tr></tbody></table></div>
-<details><summary>Как рассчитывается результат</summary><div class="fx-note">
-<p>Q — обязательство в валюте; h — доля покрытия; K — курс форварда, рублей за единицу валюты; S — сценарный курс платежа; R — сценарный фиксинг NDF.</p>
-<p>Для рублёвого договора с линейной валютной оговоркой Q = базовая цена в рублях / базовый курс договора. Платёж поставщику = Q × S. Оговорки с ограничениями, несколькими датами или иными формулами эта модель не описывает.</p>
-<p>Поставочный форвард: расходы на платёж = Q × h × K + Q × (1 − h) × S.</p>
-<p>Рублёвый NDF для покупателя валюты: выплата клиенту = Q × h × (R − K). Положительная величина — банк платит клиенту; отрицательная — клиент платит банку. Итог = Q × S − выплата по NDF + затраты. Когда R отличается от S, остаётся базисный риск. Расчёт относится к NDF с номиналом в иностранной валюте и выплатой в рублях.</p>
-<p>Итог без защиты = Q × S + указанные расходы без защиты. Итог с защитой включает указанные комиссии и стоимость обеспечения за срок. Возвратный залог показывается отдельно и не считается расходом. Модель не оценивает максимальный кассовый разрыв или дополнительные маржевые требования.</p>
-<p>Исторические сценарии: для каждого опубликованного курса берётся изменение к курсу за выбранное число календарных дней до него (последняя публикация не позже начальной даты, отклонение не больше 7 дней). Из отношений конечного курса к начальному выбираются эмпирические P10, P50 и P90 с линейной интерполяцией. Сценарный курс = текущий ориентир × историческое отношение. Требуется минимум 30 интервалов; сроки — до 365 дней. Интервалы перекрываются и не являются независимыми наблюдениями. Эти процентили не задают вероятность будущих исходов и не охватывают все риски.</p>
-<p>История сохранена в странице как датированный срез официальных данных ЦБ за три года. Она не обновляется при нажатии «Обновить курсы»: эта кнопка обновляет только текущий курс. Для расширения исторического среза требуется новая публикация страницы. <a href="https://www.cbr.ru/development/sxml/" target="_blank" rel="noopener">Источник истории и описание API ЦБ</a>.</p>
-<p>Бюджет компании = Q × бюджетный курс. Запас или превышение рассчитываются с учётом введённых расходов. Если известен общий рублёвый лимит, бюджетный курс = лимит / Q.</p>
-<p>Теоретический форвард: F = S₀ × (1 + r₽ × T) / (1 + rвал × T), T = дни / 365. Используются простые ставки. Это не котировка банка и не прогноз. Для реального предложения используйте основной режим.</p>
-<p>При изменении суммы, базового курса договора, валюты, даты, доли покрытия или типа обязательства котировка очищается. Смена валюты также очищает ручной ориентир, бюджетный и базовый курсы, фиксинг NDF и валютную ставку; валютная сумма требует повторного ввода. Рублёвая базовая цена сохраняется. Досрочное закрытие и перенос сделки не рассчитываются. Учтены только введённые расходы; тарифы, лимиты и условия банка автоматически не проверяются.</p>
-<p><a href="https://www.bspb.ru/foreign-trade/hedge" target="_blank" rel="noopener">Инструменты хеджирования БСПБ</a> · <a href="https://cdn.bspb.ru/Pravila_i2_B_01_2026_na_sajt_c5b344a906.pdf" target="_blank" rel="noopener">Правила i2B: расчётный форвард</a>. Валютный справочник не является перечнем доступных сделок банка. Калькулятор не является официальным сервисом БСПБ и не заключает сделки.</p>
-</div></details>
+<p class="fx-note" style="margin-top:24px">Калькулятор не является официальным сервисом БСПБ и не заключает сделки. Учтены только введённые расходы. Досрочное закрытие, перенос сделки и дополнительные маржевые требования не рассчитываются. Исторический срез ЦБ за 14.11.2023–14.11.2026 не обновляется кнопкой «Обновить курсы»; она загружает только текущий курс. Теоретический расчёт не является котировкой БСПБ.</p>
 </div>
 </div>
 </section>
